@@ -1,0 +1,155 @@
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>com.danhaywood.mavenmixin</groupId>
+    <artifactId>isisjrebel</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+    
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>
+        Maven mixin providing the ability to run isis:validate goal over Apache Isis domain objects.
+    </description>
+    
+    <url>https://github.com/danhaywood/java-mavenmixin-isisjrebel</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:danhaywood/java-mavenmixin-isisjrebel.git</connection>
+        <developerConnection>scm:git:git@github.com:danhaywood/java-mavenmixin-isisjrebel.git</developerConnection>
+        <url>git@github.com:danhaywood/java-mavenmixin-isisjrebel.git</url>
+    </scm>
+    <developers>
+        <developer>
+            <id>danhaywood</id>
+            <name>Dan Haywood</name>
+            <email>dan@haywood-associates.co.uk</email>
+        </developer>
+    </developers>    
+
+    <properties>
+		<danhaywood-mavenmixin-isisjrebel.jrebel.jar>
+			C:/Users/Dan/.IdeaIC13/config/plugins/jr-ide-idea/lib/jrebel/jrebel.jar
+		</danhaywood-mavenmixin-isisjrebel.jrebel.jar>
+		<danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar>
+		    C:/github/danhaywood/isis-jrebel-plugin/target/danhaywood-isis-jrebel-plugin-1.0.0-SNAPSHOT.jar
+		</danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar>
+		<danhaywood-mavenmixin-isisjrebel.packagePrefix>
+			domainapp.modules.simple.dom.impl
+		</danhaywood-mavenmixin-isisjrebel.packagePrefix>
+    </properties>
+        
+    <profiles>
+        <profile>
+            <id>danhaywood-mavenmixin-isisjrebel</id>
+            <activation>
+                <property>
+                    <name>danhaywood-mavenmixin-isisjrebel</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <!--
+                    mvn -P danhaywood-mavenmixin-isisjrebel antrun:run
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <configuration>
+                            <target>
+                                <property name="compile_classpath" refid="maven.compile.classpath" />
+                                <property name="runtime_classpath" refid="maven.runtime.classpath" />
+                                <property name="test_classpath" refid="maven.test.classpath" />
+                                <property name="plugin_classpath" refid="maven.plugin.classpath" />
+
+                                <echo message="" />
+                                <echo message="" />
+                                <echo message="jrebel.jar             = ${jrebel.jar}" />
+                                <echo message="isis_jrebel_plugin.jar = ${isis_jrebel_plugin.jar}" />
+                                <echo message="target.dir             = ${target.dir}" />
+                                <echo message="" />
+                                <echo message="" />
+
+                                <exec executable="java" failonerror="true">
+                                    <arg value="-javaagent:${danhaywood-mavenmixin-isisjrebel.jrebel.jar}" />
+                                    <arg value="-Drebel.log=false" />
+                                    <arg value="-Drebel.check_class_hash=true" />
+                                    <arg value="-Drebel.packages_exclude=org.apache.isis" />
+
+                                    <!-- as used in the rebel.xml in the dom project -->
+                                    <arg value="-Dproject.root=${project.basedir}/.." />
+                                    <arg value="-Dtarget.dir=${project.build.directory}" />
+
+                                    <arg value="-Drebel.plugins=${danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar}" />
+                                    <arg value="-Disis-jrebel-plugin.packagePrefix=${danhaywood-mavenmixin-isisjrebel.packagePrefix}" />
+                                    <arg value="-Disis-jrebel-plugin.loggingLevel=warn" />
+                                    <arg value="-XX:MaxPermSize=128m" />
+                                    <arg value="-classpath" />
+                                    <arg value="${runtime_classpath}" />
+                                    <arg value="org.apache.isis.WebServer" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>danhaywood-mavenmixin-sonatyperelease</id>
+            <!-- 
+            this profile is not part of the mixin, but is required to be defined as a profile
+            in order to release this mixin pom.xml to Maven Central repo
+            -->
+            <build>
+                <plugins>
+                    <!-- http://central.sonatype.org/pages/apache-maven.html -->
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.2</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <!-- http://kohsuke.org/pgp-maven-plugin/secretkey.html instead of maven-gpg-plugin -->
+                    <plugin>
+                        <groupId>org.kohsuke</groupId>
+                        <artifactId>pgp-maven-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+
+    
+</project>
