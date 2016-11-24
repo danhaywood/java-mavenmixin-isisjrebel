@@ -13,7 +13,7 @@
     
     <name>${project.groupId}:${project.artifactId}</name>
     <description>
-        Maven mixin providing the ability to run isis:validate goal over Apache Isis domain objects.
+        Maven mixin providing the ability to run an Apache Isis application under JRebel.
     </description>
     
     <url>https://github.com/danhaywood/java-mavenmixin-isisjrebel</url>
