@@ -38,6 +38,8 @@ and: +
     <pluginManagement>
         <plugins>
             ...
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>${maven-antrun-plugin.version}</version>
             ...
         </plugins>
     </pluginManagement>
@@ -50,17 +52,17 @@ and: +
 ----
 <properties>
     ...
-    <maven-antrun-plugin.exec.isisjrebel.jrebel.jar>        <!--1-->
+    <maven-antrun-plugin.isisjrebel.jrebel.jar>                     <!--1-->
         jrebel.jar
-    </maven-antrun-plugin.exec.isisjrebel.jrebel.jar>
+    </maven-antrun-plugin.isisjrebel.jrebel.jar>
     
-    <maven-antrun-plugin.exec.isis_jrebel_plugin.jar>       <!--2-->
+    <maven-antrun-plugin.isisjrebel.plugin.jar>                     <!--2-->
         danhaywood-isis-jrebel-plugin-1.0.0-SNAPSHOT.jar
-    </maven-antrun-plugin.exec.isis_jrebel_plugin.jar>
+    </maven-antrun-plugin.isisjrebel.plugin.jar>
     
-    <maven-antrun-plugin.exec.packagePrefix>                <!--3-->
+    <maven-antrun-plugin.isisjrebel.packagePrefix>                  <!--3-->
         domainapp.modules.simple.dom.impl
-    </maven-antrun-plugin.exec.packagePrefix>
+    </maven-antrun-plugin.isisjrebel.packagePrefix>
     ...
 </properties>
 ----

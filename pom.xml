@@ -49,17 +49,17 @@
             <properties>
                 <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
 
-                <maven-antrun-plugin.exec.isisjrebel.jrebel.jar>
+                <maven-antrun-plugin.isisjrebel.jrebel.jar>
                     C:/Users/Dan/.IdeaIC13/config/plugins/jr-ide-idea/lib/jrebel/jrebel.jar
-                </maven-antrun-plugin.exec.isisjrebel.jrebel.jar>
+                </maven-antrun-plugin.isisjrebel.jrebel.jar>
                 
-                <maven-antrun-plugin.exec.isis_jrebel_plugin.jar>
+                <maven-antrun-plugin.isisjrebel.plugin.jar>
                     C:/github/danhaywood/isis-jrebel-plugin/target/danhaywood-isis-jrebel-plugin-1.0.0-SNAPSHOT.jar
-                </maven-antrun-plugin.exec.isis_jrebel_plugin.jar>
+                </maven-antrun-plugin.isisjrebel.plugin.jar>
                 
-                <maven-antrun-plugin.exec.packagePrefix>
+                <maven-antrun-plugin.isisjrebel.packagePrefix>
                     domainapp.modules.simple.dom.impl
-                </maven-antrun-plugin.exec.packagePrefix>
+                </maven-antrun-plugin.isisjrebel.packagePrefix>
             </properties>
 
             <build>
@@ -87,7 +87,7 @@
                                 <echo message="" />
 
                                 <exec executable="java" failonerror="true">
-                                    <arg value="-javaagent:${maven-antrun-plugin.exec.jrebel.jar}" />
+                                    <arg value="-javaagent:${maven-antrun-plugin.isisjrebel.jrebel.jar}" />
                                     <arg value="-Drebel.log=false" />
                                     <arg value="-Drebel.check_class_hash=true" />
                                     <arg value="-Drebel.packages_exclude=org.apache.isis" />
@@ -96,8 +96,8 @@
                                     <arg value="-Dproject.root=${project.basedir}/.." />
                                     <arg value="-Dtarget.dir=${project.build.directory}" />
 
-                                    <arg value="-Drebel.plugins=${maven-antrun-plugin.exec.isis_jrebel_plugin.jar}" />
-                                    <arg value="-Disis-jrebel-plugin.packagePrefix=${maven-antrun-plugin.exec.packagePrefix}" />
+                                    <arg value="-Drebel.plugins=${maven-antrun-plugin.isisjrebel.plugin.jar}" />
+                                    <arg value="-Disis-jrebel-plugin.packagePrefix=${maven-antrun-plugin.isisjrebel.packagePrefix}" />
                                     <arg value="-Disis-jrebel-plugin.loggingLevel=warn" />
                                     <arg value="-XX:MaxPermSize=128m" />
                                     <arg value="-classpath" />
