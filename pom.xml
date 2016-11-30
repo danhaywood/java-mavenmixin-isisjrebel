@@ -37,34 +37,40 @@
         </developer>
     </developers>    
 
-    <properties>
-		<danhaywood-mavenmixin-isisjrebel.jrebel.jar>
-			C:/Users/Dan/.IdeaIC13/config/plugins/jr-ide-idea/lib/jrebel/jrebel.jar
-		</danhaywood-mavenmixin-isisjrebel.jrebel.jar>
-		<danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar>
-		    C:/github/danhaywood/isis-jrebel-plugin/target/danhaywood-isis-jrebel-plugin-1.0.0-SNAPSHOT.jar
-		</danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar>
-		<danhaywood-mavenmixin-isisjrebel.packagePrefix>
-			domainapp.modules.simple.dom.impl
-		</danhaywood-mavenmixin-isisjrebel.packagePrefix>
-    </properties>
-        
     <profiles>
         <profile>
-            <id>danhaywood-mavenmixin-isisjrebel</id>
+            <id>mavenmixin-isisjrebel</id>
             <activation>
                 <property>
-                    <name>danhaywood-mavenmixin-isisjrebel</name>
+                    <name>mavenmixin-isisjrebel</name>
                 </property>
             </activation>
+            
+            <properties>
+                <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+
+                <maven-antrun-plugin.exec.isisjrebel.jrebel.jar>
+                    C:/Users/Dan/.IdeaIC13/config/plugins/jr-ide-idea/lib/jrebel/jrebel.jar
+                </maven-antrun-plugin.exec.isisjrebel.jrebel.jar>
+                
+                <maven-antrun-plugin.exec.isis_jrebel_plugin.jar>
+                    C:/github/danhaywood/isis-jrebel-plugin/target/danhaywood-isis-jrebel-plugin-1.0.0-SNAPSHOT.jar
+                </maven-antrun-plugin.exec.isis_jrebel_plugin.jar>
+                
+                <maven-antrun-plugin.exec.packagePrefix>
+                    domainapp.modules.simple.dom.impl
+                </maven-antrun-plugin.exec.packagePrefix>
+            </properties>
+
             <build>
                 <plugins>
                     <!--
-                    mvn -P danhaywood-mavenmixin-isisjrebel antrun:run
+                    mvn -P mavenmixin-isisjrebel antrun:run
                     -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven-antrun-plugin.version}</version>
                         <configuration>
                             <target>
                                 <property name="compile_classpath" refid="maven.compile.classpath" />
@@ -81,7 +87,7 @@
                                 <echo message="" />
 
                                 <exec executable="java" failonerror="true">
-                                    <arg value="-javaagent:${danhaywood-mavenmixin-isisjrebel.jrebel.jar}" />
+                                    <arg value="-javaagent:${maven-antrun-plugin.exec.jrebel.jar}" />
                                     <arg value="-Drebel.log=false" />
                                     <arg value="-Drebel.check_class_hash=true" />
                                     <arg value="-Drebel.packages_exclude=org.apache.isis" />
@@ -90,8 +96,8 @@
                                     <arg value="-Dproject.root=${project.basedir}/.." />
                                     <arg value="-Dtarget.dir=${project.build.directory}" />
 
-                                    <arg value="-Drebel.plugins=${danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar}" />
-                                    <arg value="-Disis-jrebel-plugin.packagePrefix=${danhaywood-mavenmixin-isisjrebel.packagePrefix}" />
+                                    <arg value="-Drebel.plugins=${maven-antrun-plugin.exec.isis_jrebel_plugin.jar}" />
+                                    <arg value="-Disis-jrebel-plugin.packagePrefix=${maven-antrun-plugin.exec.packagePrefix}" />
                                     <arg value="-Disis-jrebel-plugin.loggingLevel=warn" />
                                     <arg value="-XX:MaxPermSize=128m" />
                                     <arg value="-classpath" />

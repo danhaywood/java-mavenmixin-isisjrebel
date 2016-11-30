@@ -11,37 +11,64 @@ The profile can be enabled using a Maven property.
 
 
 
-== Input Properties
-
-The plugin requires two properties:
-
-[source,xml]
-----
-<properties>
-	<danhaywood-mavenmixin-isisjrebel.jrebel.jar>                   <!--1-->
-		jrebel.jar
-	</danhaywood-mavenmixin-isisjrebel.jrebel.jar>
-	<danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar>       <!--2-->
-	    danhaywood-isis-jrebel-plugin-1.0.0-SNAPSHOT.jar
-	</danhaywood-mavenmixin-isisjrebel.isis_jrebel_plugin.jar>
-	<danhaywood-mavenmixin-isisjrebel.packagePrefix>                <!--3-->
-		domainapp.modules.simple.dom.impl
-	</danhaywood-mavenmixin-isisjrebel.packagePrefix>
-</properties>
-----
-<1> the location of the `jrebel.jar` file
-<2> the location of the `isis-jrebel.jar` file (as built from link:https://github.com/isisaddons/isis-jrebel-plugin[Isis-Jrebel plugin])
-<3> the package prefixes to search for reloadable classes.
-
-These properties should be specified in the consuming module.
-
 
 
 == How to Configure
 
 To configure:
 
-* add the following to the `pom.xml` of the `webapp` module: +
+* copy and paste the following into either the `pom.xml` of the consuming module or (better still) the `pom.xml` of the top-level parent of the consuming module: +
++
+[source,xml]
+----
+<properties>
+    ...
+    <mavenmixin-isisjrebel.version>0.0.2</mavenmixin-isisjrebel.version>
+    
+    <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+    ...
+</properties>
+----
++
+and: +
++
+[source,xml]
+----
+<build>
+    <pluginManagement>
+        <plugins>
+            ...
+            ...
+        </plugins>
+    </pluginManagement>
+</build>
+----
+
+* update the following property/ies in the `pom.xml` of the consuming `webapp` module: +
++
+[source,xml]
+----
+<properties>
+    ...
+    <maven-antrun-plugin.exec.isisjrebel.jrebel.jar>        <!--1-->
+        jrebel.jar
+    </maven-antrun-plugin.exec.isisjrebel.jrebel.jar>
+    
+    <maven-antrun-plugin.exec.isis_jrebel_plugin.jar>       <!--2-->
+        danhaywood-isis-jrebel-plugin-1.0.0-SNAPSHOT.jar
+    </maven-antrun-plugin.exec.isis_jrebel_plugin.jar>
+    
+    <maven-antrun-plugin.exec.packagePrefix>                <!--3-->
+        domainapp.modules.simple.dom.impl
+    </maven-antrun-plugin.exec.packagePrefix>
+    ...
+</properties>
+----
+<1> the location of the `jrebel.jar` file
+<2> the location of the `isis-jrebel.jar` file (as built from link:https://github.com/isisaddons/isis-jrebel-plugin[Isis-Jrebel plugin])
+<3> the package prefixes to search for reloadable classes.
+
+* add the following to the `pom.xml` of the consuming module: +
 +
 [source,xml]
 ----
@@ -57,7 +84,7 @@ To configure:
                     <mixin>
                         <groupId>com.danhaywood.mavenmixin</groupId>
                         <artifactId>isisjrebel</artifactId>
-                        <version>0.0.1</version>
+                        <version>${mavenmixin-isisjrebel.version}</version>
                     </mixin>
                 </mixins>
             </configuration>
@@ -66,7 +93,6 @@ To configure:
 </build>
 ----
 
-* Specify the mandatory input properties (see above).
 
 
 
@@ -76,7 +102,7 @@ To use:
 
 [source,bash]
 ----
-mvn -Ddanhaywood-mavenmixin-isisjrebel antrun:run
+mvn -Dmavenmixin-isisjrebel antrun:run
 ----
 
 This will start up the Apache Isis application using `org.apache.isis.WebServer` (an embedded jetty server).
@@ -91,6 +117,7 @@ None currently
 
 == Change Log
 
+* `0.0.2` - updates README for properties and plugin management, shortens property names and profile id
 * `0.0.1` - first release
 
 
@@ -144,8 +171,8 @@ For example:
 
 [source]
 ----
-sh release.sh 0.0.1 \
-              0.0.2-SNAPSHOT \
+sh release.sh 0.0.2 \
+              0.0.3-SNAPSHOT \
               dan@haywood-associates.co.uk \
               "this is not really my passphrase"
 ----
@@ -165,7 +192,7 @@ If the script completes successfully, then push changes:
 [source]
 ----
 git push origin master
-git push origin 0.0.1
+git push origin 0.0.2
 ----
 
 If the script fails to complete, then identify the cause, perform a `git reset --hard` to start over and fix the issue before trying again.
